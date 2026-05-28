@@ -34,7 +34,6 @@ export function parseRealpadXML(xmlText: string) {
 export function mapFlats(parsedData: any) {
   const buildings = parsedData?.export?.project?.building || [];
 
-  /*
   const allFlats: any[] = [];
 
   const statusMap: Record<string, string> = {
@@ -51,7 +50,6 @@ export function mapFlats(parsedData: any) {
 
     return found?.value || null;
   };
-  */
 
   for (const building of buildings) {
     const floors = building.floor || [];
@@ -60,12 +58,6 @@ export function mapFlats(parsedData: any) {
       const flats = floor.flat || [];
 
       for (const flat of flats) {
-
-        // DEBUG RAW REALPAD OBJECT
-        return [flat];
-
-        /*
-        console.log(JSON.stringify(flat, null, 2));
 
         const baseUrl = "https://realpad-sync.vercel.app";
 
@@ -137,10 +129,9 @@ export function mapFlats(parsedData: any) {
               ]
             : [],
         });
-        */
       }
     }
   }
 
-  return [];
+  return allFlats;
 }
