@@ -59,7 +59,7 @@ export function mapFlats(parsedData: any) {
 
       for (const flat of flats) {
         
-        console.log("FLAT:", flat);
+        console.log(JSON.stringify(flat, null, 2));
 
         const baseUrl = "https://realpad-sync.vercel.app";
 
