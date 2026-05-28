@@ -58,6 +58,9 @@ export function mapFlats(parsedData: any) {
       const flats = floor.flat || [];
 
       for (const flat of flats) {
+        
+        console.log(flat);
+        
         allFlats.push({
           id: getAttr(flat, "flat_internal_id"),
 
@@ -99,6 +102,14 @@ export function mapFlats(parsedData: any) {
           floor: Number(floor.floorNo),
 
           pdf: flat.pdf || null,
+
+          picture: flat.picture || null,
+
+          pictureResource: flat.picture?.resource || null,
+
+          pictureId: flat.picture?.id || null,
+
+          raw: flat,
         });
       }
     }
