@@ -77,6 +77,20 @@ export function mapFlats(parsedData: any) {
 
           orientation: getAttr(flat, "flat_orientation"),
 
+          number: getAttr(flat, "flat_internal_id"),
+
+          type: getAttr(flat, "flat_type"),
+
+          category: getAttr(flat, "flat_category"),
+
+          priceWithoutVat: Number(getAttr(flat, "flat_price_without_vat")),
+
+          discountVat: Number(getAttr(flat, "flat_discount_vat")),
+
+          beforeDiscountVat: Number(
+            getAttr(flat, "flat_price_before_discount_vat")
+          ),
+
           price: Number(getAttr(flat, "flat_price")),
 
           status:
