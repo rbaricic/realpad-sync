@@ -31,5 +31,5 @@ export async function GET(request: Request) {
     );
   }
 
-  return Response.json(filteredFlats);
+  return Response.json(parsedData);
 }
