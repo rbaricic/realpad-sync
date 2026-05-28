@@ -60,6 +60,10 @@ export function mapFlats(parsedData: any) {
       for (const flat of flats) {
         
         console.log(flat);
+
+        const baseUrl = "https://realpad-sync.vercel.app";
+
+        const flatNumber = getAttr(flat, "flat_internal_id");
         
         allFlats.push({
           id: getAttr(flat, "flat_internal_id"),
@@ -105,6 +109,15 @@ export function mapFlats(parsedData: any) {
             id: flat.picture?.id || null,
             resource: flat.picture?.resource || null,
           },
+
+          floorplanUrl:
+            `${baseUrl}/floorplans/bytyPNG/${flatNumber}_1.png`,
+
+          buildingSituationUrl:
+            `${baseUrl}/floorplans/situaciePNG/${flatNumber}_2.png`,
+
+          floorSituationUrl:
+            `${baseUrl}/floorplans/situaciePNG/${flatNumber}_3.png`,
 
           pdf: flat.pdf || null,
 
