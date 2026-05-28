@@ -103,13 +103,9 @@ export function mapFlats(parsedData: any) {
 
           pdf: flat.pdf || null,
 
-          picture: flat.picture || null,
-
           pictureResource: flat.picture?.resource || null,
 
           pictureId: flat.picture?.id || null,
-
-          raw: flat,
         });
       }
     }
