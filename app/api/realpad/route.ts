@@ -1,3 +1,4 @@
+/*
 import {
   fetchRealpadXML,
   parseRealpadXML,
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
 
   const parsedData = parseRealpadXML(xmlText);
 
-  const allFlats = mapFlats(parsedData);
+  const allFlats = mapFlats(parsedData); 
 
   let filteredFlats = allFlats;
 
@@ -30,6 +31,21 @@ export async function GET(request: Request) {
       (flat: any) => flat.floor === Number(floorFilter)
     );
   }
+
+  return Response.json(parsedData);
+} 
+  */
+
+
+import {
+  fetchRealpadXML,
+  parseRealpadXML,
+} from "@/lib/realpad";
+
+export async function GET(request: Request) {
+  const xmlText = await fetchRealpadXML();
+
+  const parsedData = parseRealpadXML(xmlText);
 
   return Response.json(parsedData);
 }
