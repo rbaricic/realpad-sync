@@ -101,11 +101,22 @@ export function mapFlats(parsedData: any) {
 
           floor: Number(floor.floorNo),
 
+          floorplan: {
+            id: flat.picture?.id || null,
+            resource: flat.picture?.resource || null,
+          },
+
           pdf: flat.pdf || null,
 
-          pictureResource: flat.picture?.resource || null,
-
-          pictureId: flat.picture?.id || null,
+          images: flat.picture
+          ? [
+              {
+                 id: flat.picture.id,
+                  resource: flat.picture.resource,
+                  type: "floorplan",
+              },
+            ]
+          : [],
         });
       }
     }
