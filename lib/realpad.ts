@@ -65,6 +65,18 @@ export function mapFlats(parsedData: any) {
 
           area: Number(getAttr(flat, "flat_area")),
 
+          livingArea: Number(getAttr(flat, "flat_area_living")),
+
+          balcony: Number(getAttr(flat, "flat_area_balcony")),
+
+          terrace: Number(getAttr(flat, "flat_area_terrace")),
+
+          loggia: Number(getAttr(flat, "flat_area_loggia")),
+
+          garden: Number(getAttr(flat, "flat_area_garden")),
+
+          orientation: getAttr(flat, "flat_orientation"),
+
           price: Number(getAttr(flat, "flat_price")),
 
           status:
