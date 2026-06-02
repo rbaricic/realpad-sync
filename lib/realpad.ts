@@ -36,17 +36,26 @@ export function mapFlats(parsedData: any) {
 
   const allFlats: any[] = [];
 
+  // REALPAD STATUS MAP
   const statusMap: Record<string, string> = {
-    "0": "Sold",
-    "1": "Reserved",
-    "2": "Available",
-    "3": "Available",
+    "0": "VOLNÝ",
+    "1": "V JEDNÁNÍ",
+    "2": "PRODANÝ",
+    "3": "PRODANÝ",
   };
+
+  // HIDE COMPLETELY
+  const hiddenStatuses = ["4", "5"];
+
+  // HIDE PRICE
+  const hidePriceStatuses = ["2", "3"];
 
   const getAttr = (flat: any, key: string) => {
     const attributes = flat["flat-attribute"] || [];
 
-    const found = attributes.find((attr: any) => attr.key === key);
+    const found = attributes.find(
+      (attr: any) => attr.key === key
+    );
 
     return found?.value || null;
   };
@@ -59,53 +68,140 @@ export function mapFlats(parsedData: any) {
 
       for (const flat of flats) {
 
-        const baseUrl = "https://realpad-sync.vercel.app";
+        const baseUrl =
+          "https://realpad-sync.vercel.app";
 
-        const flatNumber = getAttr(flat, "flat_internal_id");
+        const flatNumber =
+          getAttr(flat, "flat_internal_id");
+
+        const rawStatus =
+          getAttr(flat, "flat_status");
+
+        // HIDE FLATS WITH STATUS 4 / 5
+        const isVisible =
+          !hiddenStatuses.includes(rawStatus);
+
+        if (!isVisible) continue;
+
+        // HIDE PRICE FOR SOLD FLATS
+        const hidePrice =
+          hidePriceStatuses.includes(rawStatus);
+
+        // AREAS
+        const balcony =
+          Number(getAttr(flat, "flat_area_balcony")) || 0;
+
+        const terrace =
+          Number(getAttr(flat, "flat_area_terrace")) || 0;
+
+        const loggia =
+          Number(getAttr(flat, "flat_area_loggia")) || 0;
+
+        const exteriorArea =
+          balcony + terrace + loggia;
 
         allFlats.push({
-          id: getAttr(flat, "flat_internal_id"),
+          // BASIC
+          id: flatNumber,
 
-          title: getAttr(flat, "flat_disposition"),
+          number: flatNumber,
 
-          area: Number(getAttr(flat, "flat_area")),
+          title:
+            getAttr(flat, "flat_disposition"),
 
-          livingArea: Number(getAttr(flat, "flat_area_living")),
+          disposition:
+            getAttr(flat, "flat_disposition"),
 
-          balcony: Number(getAttr(flat, "flat_area_balcony")),
+          type:
+            getAttr(flat, "flat_type"),
 
-          terrace: Number(getAttr(flat, "flat_area_terrace")),
+          category:
+            getAttr(flat, "flat_category"),
 
-          loggia: Number(getAttr(flat, "flat_area_loggia")),
+          // BUILDING
+          building:
+            building.buildingNo || null,
 
-          garden: Number(getAttr(flat, "flat_area_garden")),
+          floor:
+            Number(floor.floorNo),
 
-          orientation: getAttr(flat, "flat_orientation"),
-
-          number: getAttr(flat, "flat_internal_id"),
-
-          type: getAttr(flat, "flat_type"),
-
-          category: getAttr(flat, "flat_category"),
-
-          priceWithoutVat: Number(getAttr(flat, "flat_price_without_vat")),
-
-          discountVat: Number(getAttr(flat, "flat_discount_vat")),
-
-          beforeDiscountVat: Number(
-            getAttr(flat, "flat_price_before_discount_vat")
-          ),
-
-          price: Number(getAttr(flat, "flat_price")),
+          // STATUS
+          rawStatus,
 
           status:
-            statusMap[getAttr(flat, "flat_status")] || "Unknown",
+            statusMap[rawStatus] || "NEZNÁMÝ",
 
-          floor: Number(floor.floorNo),
+          isVisible,
 
+          hidePrice,
+
+          // AREAS
+          area:
+            Number(getAttr(flat, "flat_area")) || 0,
+
+          livingArea:
+            Number(getAttr(flat, "flat_area_living")) || 0,
+
+          balcony,
+
+          terrace,
+
+          loggia,
+
+          exteriorArea,
+
+          garden:
+            Number(getAttr(flat, "flat_area_garden")) || 0,
+
+          // ORIENTATION
+          orientation:
+            getAttr(flat, "flat_orientation"),
+
+          // PRICES
+          price:
+            hidePrice
+              ? null
+              : Number(getAttr(flat, "flat_price")) || 0,
+
+          priceWithoutVat:
+            hidePrice
+              ? null
+              : Number(
+                  getAttr(flat, "flat_price_without_vat")
+                ) || 0,
+
+          beforeDiscountVat:
+            hidePrice
+              ? null
+              : Number(
+                  getAttr(
+                    flat,
+                    "flat_price_before_discount_vat"
+                  )
+                ) || 0,
+
+          discountVat:
+            hidePrice
+              ? null
+              : Number(
+                  getAttr(flat, "flat_discount_vat")
+                ) || 0,
+
+          // GARAGE PRICE
+          garagePrice:
+            Number(
+              getAttr(
+                flat,
+                "associatedunits_totalprice_vat"
+              )
+            ) || null,
+
+          // FLOORPLAN
           floorplan: {
             id: flat.picture?.id || null,
-            resource: flat.picture?.resource || null,
+
+            resource:
+              flat.picture?.resource || null,
           },
 
           floorplanUrl:
@@ -117,13 +213,19 @@ export function mapFlats(parsedData: any) {
           floorSituationUrl:
             `${baseUrl}/floorplans/situaciePNG/${flatNumber}_3.png`,
 
-          pdf: flat.pdf || null,
+          // PDF
+          pdf:
+            flat.pdf || null,
 
+          // IMAGES
           images: flat.picture
             ? [
                 {
                   id: flat.picture.id,
-                  resource: flat.picture.resource,
+
+                  resource:
+                    flat.picture.resource,
+
                   type: "floorplan",
                 },
               ]
