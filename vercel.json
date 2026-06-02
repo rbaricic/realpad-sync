@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/sync-webflow",
+      "path": "/api/webflow-sync",
       "schedule": "0 * * * *"
     }
   ]
