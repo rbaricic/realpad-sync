@@ -118,10 +118,7 @@ export function mapFlats(parsedData: any) {
           category:
             getAttr(flat, "flat_category"),
 
-          // BUILDING
-          building:
-            building.buildingNo || null,
-
+          // FLOOR
           floor:
             Number(floor.floorNo),
 
@@ -186,15 +183,6 @@ export function mapFlats(parsedData: any) {
               : Number(
                   getAttr(flat, "flat_discount_vat")
                 ) || 0,
-
-          // GARAGE PRICE
-          garagePrice:
-            Number(
-              getAttr(
-                flat,
-                "associatedunits_totalprice_vat"
-              )
-            ) || null,
 
           // FLOORPLAN
           floorplan: {
