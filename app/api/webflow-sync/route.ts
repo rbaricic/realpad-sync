@@ -56,9 +56,7 @@ export async function GET() {
         floor: flat.floor,
 
         // FORMATTED PRICES
-       cena: flat.price
-  ? Number(flat.price).toLocaleString("cs-CZ")
-  : "",
+       "cena": formatPrice(flat.price),
 
         "price-without-vat": flat.priceWithoutVat
   ? Number(flat.priceWithoutVat).toLocaleString("cs-CZ")
