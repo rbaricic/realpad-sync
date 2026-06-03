@@ -6,23 +6,16 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-// FORMAT PRICE
-const formatPrice = (value: any) => {
-  if (!value) return "";
-
-  return Number(value).toLocaleString("cs-CZ");
-};
-
 export async function GET() {
   try {
-    // LOAD REALPAD FLATS
+    // LOAD REALPAD DATA
     const response = await fetch(
       "https://realpad-sync.vercel.app/api/realpad"
     );
 
     const flats = await response.json();
 
-    // LOAD EXISTING WEBFLOW ITEMS
+    // LOAD WEBFLOW ITEMS
     const existingResponse = await fetch(
       `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
       {
@@ -34,80 +27,95 @@ export async function GET() {
 
     const existingItems = existingData.items || [];
 
-    console.log("WEBFLOW EXISTING ITEM:");
-    console.log(existingItems[0]?.fieldData);
-
     let created = 0;
     let updated = 0;
+    let skipped = 0;
 
     for (const flat of flats) {
+
+      // SKIP HIDDEN FLATS
+      if (!flat.isVisible) {
+        skipped++;
+        continue;
+      }
+
       const existingItem = existingItems.find(
         (item: any) =>
           item.fieldData?.["flat-id"] === flat.id
       );
 
       const fieldData = {
-        name: flat.number,
-        slug: flat.number.toLowerCase().replace(/\./g, "-"),
+        name: flat.number || "byt",
 
-        "flat-id": flat.id,
+        slug: (flat.number || "byt")
+          .toLowerCase()
+          .replace(/\./g, "-")
+          .replace(/\s+/g, "-"),
 
-        number: flat.number,
-        title: flat.title,
-        status: flat.status,
+        // IDs
+        "flat-id": flat.id || "",
+        number: flat.number || "",
 
-        floor: flat.floor,
+        // BASIC
+        title: flat.title || "",
+        disposition: flat.disposition || "",
+        status: flat.status || "",
 
-        // FORMATTED PRICES
-        price: flat.price,
+        // LOCATION
+        floor: flat.floor || 0,
+        building: flat.building || "",
 
-        "price-without-vat":
-          formatPrice(flat.priceWithoutVat),
+        // PRICE
+        price: flat.price || 0,
+        "price-without-vat": flat.priceWithoutVat || 0,
+        "before-discount-vat": flat.beforeDiscountVat || 0,
+        "discount-vat": flat.discountVat || 0,
 
-        "before-discount-vat":
-          formatPrice(flat.beforeDiscountVat),
+        // FLAGS
+        "hide-price": flat.hidePrice || false,
 
-        "discount-vat":
-          formatPrice(flat.discountVat),
+        // AREAS
+        area: flat.area || 0,
+        "living-area": flat.livingArea || 0,
+        balcony: flat.balcony || 0,
+        terrace: flat.terrace || 0,
+        loggia: flat.loggia || 0,
+        garden: flat.garden || 0,
+        "exterior-area": flat.exteriorArea || 0,
 
-        area: flat.area,
+        // DETAILS
+        orientation: flat.orientation || "",
+        type: flat.type || "",
+        category: flat.category || "",
 
-        "living-area": flat.livingArea,
+        // PDF
+        pdf: flat.pdf || "",
 
-        balcony: flat.balcony,
-
-        terrace: flat.terrace,
-
-        loggia: flat.loggia,
-
-        garden: flat.garden,
-
-        orientation: flat.orientation,
-
-        type: flat.type,
-
-        category: flat.category,
-
-        pdf: flat.pdf,
-
+        // FLOORPLAN
         "floorplan-resource":
           flat.floorplan?.resource || "",
 
         "floorplan-id":
           flat.floorplan?.id || "",
 
-        "images-json": JSON.stringify(
-          flat.images || []
-        ),
-      };
+        // IMAGES
+        "floorplan-url":
+          flat.floorplanUrl || "",
 
-      console.log("FIELD DATA:");
-      console.log(fieldData);
+        "building-situation-url":
+          flat.buildingSituationUrl || "",
+
+        "floor-situation-url":
+          flat.floorSituationUrl || "",
+
+        "images-json":
+          JSON.stringify(flat.images || []),
+      };
 
       // UPDATE
       if (existingItem) {
 
-        const updateResponse = await fetch(
+        await fetch(
           `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
           {
             method: "PATCH",
@@ -121,19 +129,13 @@ export async function GET() {
           }
         );
 
-        const updateData =
-          await updateResponse.json();
-
-        console.log("UPDATE RESPONSE:");
-        console.log(updateData);
-
         updated++;
       }
 
       // CREATE
       else {
 
-        const createResponse = await fetch(
+        await fetch(
           `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
           {
             method: "POST",
@@ -147,12 +149,6 @@ export async function GET() {
           }
         );
 
-        const createData =
-          await createResponse.json();
-
-        console.log("CREATE RESPONSE:");
-        console.log(createData);
-
         created++;
       }
     }
@@ -162,12 +158,10 @@ export async function GET() {
       total: flats.length,
       created,
       updated,
+      skipped,
     });
 
   } catch (error) {
-
-    console.log("SYNC ERROR:");
-    console.log(error);
 
     return Response.json({
       success: false,
@@ -175,5 +169,3 @@ export async function GET() {
     });
   }
 }
-
-//TEST
