@@ -7,6 +7,7 @@ const headers = {
 };
 
 export async function GET() {
+
   try {
 
     // LOAD REALPAD DATA
@@ -24,9 +25,11 @@ export async function GET() {
       }
     );
 
-    const existingData = await existingResponse.json();
+    const existingData =
+      await existingResponse.json();
 
-    const existingItems = existingData.items || [];
+    const existingItems =
+      existingData.items || [];
 
     let created = 0;
     let updated = 0;
@@ -40,10 +43,11 @@ export async function GET() {
         continue;
       }
 
-      const existingItem = existingItems.find(
-        (item: any) =>
-          item.fieldData?.["flat-id"] === flat.id
-      );
+      const existingItem =
+        existingItems.find(
+          (item: any) =>
+            item.fieldData?.["flat-id"] === flat.id
+        );
 
       const fieldData = {
 
@@ -55,7 +59,7 @@ export async function GET() {
           .replace(/\./g, "-")
           .replace(/\s+/g, "-"),
 
-        // IDs
+        // IDS
         "flat-id": flat.id || "",
 
         number: flat.number || "",
@@ -63,26 +67,33 @@ export async function GET() {
         // INFO
         title: flat.title || "",
 
-        disposition: flat.disposition || "",
+        disposition:
+          flat.disposition || "",
 
         status: flat.status || "",
 
         // LOCATION
         floor: Number(flat.floor || 0),
 
-        building: flat.building || "",
+        building:
+          flat.building || "",
 
         // PRICE
-        "flat-price": Number(flat.price || 0),
+        "flat-price":
+          Number(flat.price || 0),
 
-        "vat-1": Number(flat.priceWithoutVat || 0),
+        "vat-1":
+          Number(flat.priceWithoutVat || 0),
 
-        "flat-before-discount-vat":Number(flat.beforeDiscountVat || 0),
-    
-        "flat-discount-vat":Number(flat.discountVat || 0),
+        "vat-2":
+          Number(flat.beforeDiscountVat || 0),
+
+        "vat-3":
+          Number(flat.discountVat || 0),
 
         // AREAS
-        area: Number(flat.area || 0),
+        area:
+          Number(flat.area || 0),
 
         "living-area":
           Number(flat.livingArea || 0),
@@ -120,7 +131,7 @@ export async function GET() {
         "floorplan-id":
           flat.floorplan?.id || "",
 
-        // URLs
+        // URLS
         "floorplan-url":
           flat.floorplanUrl || "",
 
@@ -139,64 +150,63 @@ export async function GET() {
       console.log(fieldData);
 
       // UPDATE
-      // UPDATE
-if (existingItem) {
+      if (existingItem) {
 
-  const updateResponse = await fetch(
-    `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
-    {
-      method: "PATCH",
-      headers,
+        const updateResponse = await fetch(
+          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
+          {
+            method: "PATCH",
+            headers,
 
-      body: JSON.stringify({
-        isArchived: false,
-        isDraft: false,
-        fieldData,
-      }),
-    }
-  );
+            body: JSON.stringify({
+              isArchived: false,
+              isDraft: false,
+              fieldData,
+            }),
+          }
+        );
 
-  const updateData =
-    await updateResponse.text();
+        const updateData =
+          await updateResponse.text();
 
-  console.log("UPDATE STATUS:");
-  console.log(updateResponse.status);
+        console.log("UPDATE STATUS:");
+        console.log(updateResponse.status);
 
-  console.log("UPDATE DATA:");
-  console.log(updateData);
+        console.log("UPDATE DATA:");
+        console.log(updateData);
 
-  updated++;
-}
+        updated++;
+      }
 
       // CREATE
-      // CREATE
-else {
+      else {
 
-  const createResponse = await fetch(
-    `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
-    {
-      method: "POST",
-      headers,
+        const createResponse = await fetch(
+          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
+          {
+            method: "POST",
+            headers,
 
-      body: JSON.stringify({
-        isArchived: false,
-        isDraft: false,
-        fieldData,
-      }),
+            body: JSON.stringify({
+              isArchived: false,
+              isDraft: false,
+              fieldData,
+            }),
+          }
+        );
+
+        const createData =
+          await createResponse.text();
+
+        console.log("CREATE STATUS:");
+        console.log(createResponse.status);
+
+        console.log("CREATE DATA:");
+        console.log(createData);
+
+        created++;
+      }
     }
-  );
-
-  const createData =
-    await createResponse.text();
-
-  console.log("CREATE STATUS:");
-  console.log(createResponse.status);
-
-  console.log("CREATE DATA:");
-  console.log(createData);
-
-  created++;
-}
 
     return Response.json({
       success: true,
