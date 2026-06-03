@@ -59,7 +59,7 @@ export async function GET() {
         floor: flat.floor,
 
         // FORMATTED PRICES
-        price: formatPrice(flat.price),
+        price: flat.price,
 
         "price-without-vat":
           formatPrice(flat.priceWithoutVat),
