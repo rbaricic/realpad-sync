@@ -72,11 +72,11 @@ export async function GET() {
         floor: Number(flat.floor || 0),
 
         // PRICE
-        "flat-price":
-          Number(flat.price || 0),
+       "flat-price": Number(flat.price || 0),
 
-        "vat-1":
-          Number(flat.priceWithoutVat || 0),
+        "flat-price-with-vat": Math.round(
+           Number(flat.price || 0) * 1.15
+             ),
 
         // AREAS
         area:
