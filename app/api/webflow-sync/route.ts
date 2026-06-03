@@ -8,7 +8,7 @@ const headers = {
 
 // FORMAT PRICE
 const formatPrice = (value: any) => {
-  if (!value) return null;
+  if (!value) return "";
 
   return Number(value).toLocaleString("cs-CZ");
 };
@@ -34,6 +34,9 @@ export async function GET() {
 
     const existingItems = existingData.items || [];
 
+    console.log("WEBFLOW EXISTING ITEM:");
+    console.log(existingItems[0]?.fieldData);
+
     let created = 0;
     let updated = 0;
 
@@ -56,29 +59,33 @@ export async function GET() {
         floor: flat.floor,
 
         // FORMATTED PRICES
-       "cena": formatPrice(flat.price),
+        "cena": formatPrice(flat.price),
 
-        "price-without-vat": flat.priceWithoutVat
-  ? Number(flat.priceWithoutVat).toLocaleString("cs-CZ")
-  : "",
+        "price-without-vat":
+          formatPrice(flat.priceWithoutVat),
 
-"before-discount-vat": flat.beforeDiscountVat
-  ? Number(flat.beforeDiscountVat).toLocaleString("cs-CZ")
-  : "",
+        "before-discount-vat":
+          formatPrice(flat.beforeDiscountVat),
 
-"discount-vat": flat.discountVat
-  ? Number(flat.discountVat).toLocaleString("cs-CZ")
-  : "",
+        "discount-vat":
+          formatPrice(flat.discountVat),
 
         area: flat.area,
+
         "living-area": flat.livingArea,
+
         balcony: flat.balcony,
+
         terrace: flat.terrace,
+
         loggia: flat.loggia,
+
         garden: flat.garden,
 
         orientation: flat.orientation,
+
         type: flat.type,
+
         category: flat.category,
 
         pdf: flat.pdf,
@@ -94,9 +101,13 @@ export async function GET() {
         ),
       };
 
+      console.log("FIELD DATA:");
+      console.log(fieldData);
+
       // UPDATE
       if (existingItem) {
-        await fetch(
+
+        const updateResponse = await fetch(
           `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
           {
             method: "PATCH",
@@ -110,12 +121,19 @@ export async function GET() {
           }
         );
 
+        const updateData =
+          await updateResponse.json();
+
+        console.log("UPDATE RESPONSE:");
+        console.log(updateData);
+
         updated++;
       }
 
       // CREATE
       else {
-        await fetch(
+
+        const createResponse = await fetch(
           `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
           {
             method: "POST",
@@ -129,6 +147,12 @@ export async function GET() {
           }
         );
 
+        const createData =
+          await createResponse.json();
+
+        console.log("CREATE RESPONSE:");
+        console.log(createData);
+
         created++;
       }
     }
@@ -139,7 +163,12 @@ export async function GET() {
       created,
       updated,
     });
+
   } catch (error) {
+
+    console.log("SYNC ERROR:");
+    console.log(error);
+
     return Response.json({
       success: false,
       error,
