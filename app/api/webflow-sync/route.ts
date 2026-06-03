@@ -75,14 +75,17 @@ export async function GET() {
         // PRICE
         "flat-price": Number(flat.price || 0),
 
-        "price-without-vat":
-          Number(flat.priceWithoutVat || 0),
+       "price-without-vat":
+  Number(flat.priceWithoutVat || 0)
+    .toLocaleString("cs-CZ"),
 
-        "before-discount-vat":
-          Number(flat.beforeDiscountVat || 0),
+"before-discount-vat":
+  Number(flat.beforeDiscountVat || 0)
+    .toLocaleString("cs-CZ"),
 
-        "discount-vat":
-          Number(flat.discountVat || 0),
+"discount-vat":
+  Number(flat.discountVat || 0)
+    .toLocaleString("cs-CZ"),
 
         // AREAS
         area: Number(flat.area || 0),
