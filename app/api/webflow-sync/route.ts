@@ -79,23 +79,17 @@ export async function GET() {
              ),
 
         // AREAS
-        area:
-          Number(flat.area || 0),
+        area: flat.area ?? null,
 
-        "living-area":
-          Number(flat.livingArea || 0),
+        "living-area": flat.livingArea ?? null,
 
-        balcony:
-          Number(flat.balcony || 0),
+        balcony: flat.balcony ?? null,
 
-        terrace:
-          Number(flat.terrace || 0),
+        terrace: flat.terrace ?? null,
 
-        loggia:
-          Number(flat.loggia || 0),
+        loggia: flat.loggia ?? null,
 
-        garden:
-          Number(flat.garden || 0),
+        garden: flat.garden ?? null,
 
         // DETAILS
         orientation:
