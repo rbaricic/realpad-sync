@@ -56,19 +56,21 @@ export async function GET() {
         floor: flat.floor,
 
         // FORMATTED PRICES
-        price: formatPrice(flat.price),
+        price: flat.price
+  ? Number(flat.price).toLocaleString("cs-CZ")
+  : "",
 
-        "price-without-vat": formatPrice(
-          flat.priceWithoutVat
-        ),
+        "price-without-vat": flat.priceWithoutVat
+  ? Number(flat.priceWithoutVat).toLocaleString("cs-CZ")
+  : "",
 
-        "before-discount-vat": formatPrice(
-          flat.beforeDiscountVat
-        ),
+"before-discount-vat": flat.beforeDiscountVat
+  ? Number(flat.beforeDiscountVat).toLocaleString("cs-CZ")
+  : "",
 
-        "discount-vat": formatPrice(
-          flat.discountVat
-        ),
+"discount-vat": flat.discountVat
+  ? Number(flat.discountVat).toLocaleString("cs-CZ")
+  : "",
 
         area: flat.area,
         "living-area": flat.livingArea,
