@@ -24,7 +24,8 @@ export async function GET() {
       }
     );
 
-    const existingData = await existingResponse.json();
+    const existingData =
+      await existingResponse.json();
 
     const existingItems =
       existingData.items || [];
@@ -124,37 +125,22 @@ export async function GET() {
           ),
       };
 
-      console.log("FIELD DATA:");
-      console.log(fieldData);
-
       // UPDATE
       if (existingItem) {
 
-        const updateResponse =
-          await fetch(
-            `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
-            {
-              method: "PATCH",
-              headers,
+        await fetch(
+          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
+          {
+            method: "PATCH",
+            headers,
 
-              body: JSON.stringify({
-                isArchived: false,
-                isDraft: false,
-                fieldData,
-              }),
-            }
-          );
-
-        const updateData =
-          await updateResponse.text();
-
-        console.log("UPDATE STATUS:");
-        console.log(
-          updateResponse.status
+            body: JSON.stringify({
+              isArchived: false,
+              isDraft: false,
+              fieldData,
+            }),
+          }
         );
-
-        console.log("UPDATE DATA:");
-        console.log(updateData);
 
         updated++;
       }
@@ -162,31 +148,19 @@ export async function GET() {
       // CREATE
       else {
 
-        const createResponse =
-          await fetch(
-            `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
-            {
-              method: "POST",
-              headers,
+        await fetch(
+          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
+          {
+            method: "POST",
+            headers,
 
-              body: JSON.stringify({
-                isArchived: false,
-                isDraft: false,
-                fieldData,
-              }),
-            }
-          );
-
-        const createData =
-          await createResponse.text();
-
-        console.log("CREATE STATUS:");
-        console.log(
-          createResponse.status
+            body: JSON.stringify({
+              isArchived: false,
+              isDraft: false,
+              fieldData,
+            }),
+          }
         );
-
-        console.log("CREATE DATA:");
-        console.log(createData);
 
         created++;
       }
@@ -201,9 +175,6 @@ export async function GET() {
     });
 
   } catch (error) {
-
-    console.log("SYNC ERROR:");
-    console.log(error);
 
     return Response.json({
       success: false,
