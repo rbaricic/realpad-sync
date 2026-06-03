@@ -75,7 +75,7 @@ export async function GET() {
         // PRICE
         "flat-price": Number(flat.price || 0),
 
-        "flat-price-without-vat": Number(flat.priceWithoutVat || 0),
+        "vat-1": Number(flat.priceWithoutVat || 0),
 
         "flat-before-discount-vat":Number(flat.beforeDiscountVat || 0),
     
