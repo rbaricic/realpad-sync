@@ -6,6 +6,13 @@ const headers = {
   "Content-Type": "application/json",
 };
 
+// FORMAT PRICE
+const formatPrice = (value: any) => {
+  if (!value) return null;
+
+  return Number(value).toLocaleString("cs-CZ");
+};
+
 export async function GET() {
   try {
     // LOAD REALPAD FLATS
@@ -48,10 +55,20 @@ export async function GET() {
 
         floor: flat.floor,
 
-        price: flat.price,
-        "price-without-vat": flat.priceWithoutVat,
-        "before-discount-vat": flat.beforeDiscountVat,
-        "discount-vat": flat.discountVat,
+        // FORMATTED PRICES
+        price: formatPrice(flat.price),
+
+        "price-without-vat": formatPrice(
+          flat.priceWithoutVat
+        ),
+
+        "before-discount-vat": formatPrice(
+          flat.beforeDiscountVat
+        ),
+
+        "discount-vat": formatPrice(
+          flat.discountVat
+        ),
 
         area: flat.area,
         "living-area": flat.livingArea,
@@ -66,10 +83,15 @@ export async function GET() {
 
         pdf: flat.pdf,
 
-        "floorplan-resource": flat.floorplan?.resource || "",
-        "floorplan-id": flat.floorplan?.id || "",
+        "floorplan-resource":
+          flat.floorplan?.resource || "",
 
-        "images-json": JSON.stringify(flat.images || []),
+        "floorplan-id":
+          flat.floorplan?.id || "",
+
+        "images-json": JSON.stringify(
+          flat.images || []
+        ),
       };
 
       // UPDATE
