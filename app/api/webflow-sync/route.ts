@@ -139,57 +139,64 @@ export async function GET() {
       console.log(fieldData);
 
       // UPDATE
-      if (existingItem) {
+      // UPDATE
+if (existingItem) {
 
-        const updateResponse = await fetch(
-          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
-          {
-            method: "PATCH",
-            headers,
+  const updateResponse = await fetch(
+    `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
+    {
+      method: "PATCH",
+      headers,
 
-            body: JSON.stringify({
-              isArchived: false,
-              isDraft: false,
-              fieldData,
-            }),
-          }
-        );
+      body: JSON.stringify({
+        isArchived: false,
+        isDraft: false,
+        fieldData,
+      }),
+    }
+  );
 
-        const updateText =
-          await updateResponse.text();
+  const updateData =
+    await updateResponse.text();
 
-        console.log("UPDATE RESPONSE:");
-        console.log(updateText);
+  console.log("UPDATE STATUS:");
+  console.log(updateResponse.status);
 
-        updated++;
-      }
+  console.log("UPDATE DATA:");
+  console.log(updateData);
+
+  updated++;
+}
 
       // CREATE
-      else {
+      // CREATE
+else {
 
-        const createResponse = await fetch(
-          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
-          {
-            method: "POST",
-            headers,
+  const createResponse = await fetch(
+    `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
+    {
+      method: "POST",
+      headers,
 
-            body: JSON.stringify({
-              isArchived: false,
-              isDraft: false,
-              fieldData,
-            }),
-          }
-        );
-
-        const createText =
-          await createResponse.text();
-
-        console.log("CREATE RESPONSE:");
-        console.log(createText);
-
-        created++;
-      }
+      body: JSON.stringify({
+        isArchived: false,
+        isDraft: false,
+        fieldData,
+      }),
     }
+  );
+
+  const createData =
+    await createResponse.text();
+
+  console.log("CREATE STATUS:");
+  console.log(createResponse.status);
+
+  console.log("CREATE DATA:");
+  console.log(createData);
+
+  created++;
+}
 
     return Response.json({
       success: true,
