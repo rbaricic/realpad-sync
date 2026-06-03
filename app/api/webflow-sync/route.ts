@@ -7,7 +7,6 @@ const headers = {
 };
 
 export async function GET() {
-
   try {
 
     // LOAD REALPAD DATA
@@ -25,8 +24,7 @@ export async function GET() {
       }
     );
 
-    const existingData =
-      await existingResponse.json();
+    const existingData = await existingResponse.json();
 
     const existingItems =
       existingData.items || [];
@@ -67,16 +65,10 @@ export async function GET() {
         // INFO
         title: flat.title || "",
 
-        disposition:
-          flat.disposition || "",
-
         status: flat.status || "",
 
         // LOCATION
         floor: Number(flat.floor || 0),
-
-        building:
-          flat.building || "",
 
         // PRICE
         "flat-price":
@@ -84,12 +76,6 @@ export async function GET() {
 
         "vat-1":
           Number(flat.priceWithoutVat || 0),
-
-        "vat-2":
-          Number(flat.beforeDiscountVat || 0),
-
-        "vat-3":
-          Number(flat.discountVat || 0),
 
         // AREAS
         area:
@@ -131,19 +117,11 @@ export async function GET() {
         "floorplan-id":
           flat.floorplan?.id || "",
 
-        // URLS
-        "floorplan-url":
-          flat.floorplanUrl || "",
-
-        "building-situation-url":
-          flat.buildingSituationUrl || "",
-
-        "floor-situation-url":
-          flat.floorSituationUrl || "",
-
         // IMAGES
         "images-json":
-          JSON.stringify(flat.images || []),
+          JSON.stringify(
+            flat.images || []
+          ),
       };
 
       console.log("FIELD DATA:");
@@ -152,25 +130,28 @@ export async function GET() {
       // UPDATE
       if (existingItem) {
 
-        const updateResponse = await fetch(
-          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
-          {
-            method: "PATCH",
-            headers,
+        const updateResponse =
+          await fetch(
+            `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items/${existingItem.id}`,
+            {
+              method: "PATCH",
+              headers,
 
-            body: JSON.stringify({
-              isArchived: false,
-              isDraft: false,
-              fieldData,
-            }),
-          }
-        );
+              body: JSON.stringify({
+                isArchived: false,
+                isDraft: false,
+                fieldData,
+              }),
+            }
+          );
 
         const updateData =
           await updateResponse.text();
 
         console.log("UPDATE STATUS:");
-        console.log(updateResponse.status);
+        console.log(
+          updateResponse.status
+        );
 
         console.log("UPDATE DATA:");
         console.log(updateData);
@@ -181,25 +162,28 @@ export async function GET() {
       // CREATE
       else {
 
-        const createResponse = await fetch(
-          `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
-          {
-            method: "POST",
-            headers,
+        const createResponse =
+          await fetch(
+            `https://api.webflow.com/v2/collections/${COLLECTION_ID}/items`,
+            {
+              method: "POST",
+              headers,
 
-            body: JSON.stringify({
-              isArchived: false,
-              isDraft: false,
-              fieldData,
-            }),
-          }
-        );
+              body: JSON.stringify({
+                isArchived: false,
+                isDraft: false,
+                fieldData,
+              }),
+            }
+          );
 
         const createData =
           await createResponse.text();
 
         console.log("CREATE STATUS:");
-        console.log(createResponse.status);
+        console.log(
+          createResponse.status
+        );
 
         console.log("CREATE DATA:");
         console.log(createData);
