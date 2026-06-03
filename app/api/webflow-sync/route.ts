@@ -66,7 +66,7 @@ export async function GET() {
         building: flat.building || "",
 
         // PRICE
-        price: flat.price || 0,
+        "flat-price": flat.price || 0,
         "price-without-vat": flat.priceWithoutVat || 0,
         "before-discount-vat": flat.beforeDiscountVat || 0,
         "discount-vat": flat.discountVat || 0,
